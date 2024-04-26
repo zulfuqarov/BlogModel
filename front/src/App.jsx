@@ -8,10 +8,10 @@ import Admin from './page/Admin';
 
 const App = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter >
       <Context>
         <Routes>
-          <Route path="/Blog" element={<Blog />} />
+          <Route path="/" element={<Blog />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Admin" element={<Admin />} />
         </Routes>

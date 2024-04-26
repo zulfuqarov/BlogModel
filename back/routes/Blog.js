@@ -6,22 +6,46 @@ const router = express.Router();
 
 router.post("/BlogPost", async (req, res) => {
   const { title, descriptionTitle, description, Name, links } = req.body;
-  let BlogImg = req.files && req.files.BlogImg ? req.files.BlogImg : "No Img";
+  let BlogImg =
+    req.files && req.files.BlogImg
+      ? req.files.BlogImg.map((file) => file.tempFilePath)
+      : "No Img";
+
+  let descriptionImg =
+    req.files && req.files.descriptionImg
+      ? req.files.descriptionImg.map((oneMap) => oneMap.tempFilePath)
+      : "No Img";
   try {
     if (BlogImg !== "No Img") {
-      BlogImg = await cloudinary.uploader.upload(BlogImg, {
-        use_filename: true,
-        folder: "Home",
-      });
+      BlogImg = await Promise.all(
+        BlogImg.map(async (oneMap) => {
+          return await cloudinary.uploader.upload(oneMap, {
+            use_filename: true,
+            folder: "Home",
+          });
+        })
+      );
     }
 
+    if (descriptionImg !== "No Img") {
+      descriptionImg = await Promise.all(
+        descriptionImg.map(async (oneMap) => {
+          return await cloudinary.uploader.upload(oneMap, {
+            use_filename: true,
+            folder: "Home",
+          });
+        })
+      );
+    }
     const newBlogSchema = await new BlogSchema({
       title,
       descriptionTitle,
       description,
       Name,
       links,
-      img: BlogImg !== "No Img" ? BlogImg.url : BlogImg,
+      img: BlogImg !== "No Img" ? BlogImg : BlogImg,
+      descriptionImg:
+        descriptionImg !== "No Img" ? descriptionImg : descriptionImg,
     });
     await newBlogSchema.save();
     return res
