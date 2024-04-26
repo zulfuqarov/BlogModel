@@ -31,7 +31,7 @@ router.post("/Register", async (req, res) => {
   }
 });
 
-router.get("/Login", async (req, res) => {
+router.post("/Login", async (req, res) => {
   const { email, password } = req.body;
   try {
     if (email && password) {
