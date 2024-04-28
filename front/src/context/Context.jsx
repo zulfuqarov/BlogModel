@@ -44,12 +44,30 @@ const Context = ({ children }) => {
     }
 
     // Admin Login End
+
+
+    // Get Blog Seacrh and all start
+    const [searchData, setsearchData] = useState([])
+
+    const GetBlogSearch = async (Search) => {
+        try {
+            const result = await axios.post(`${env.REACT_APP_BACKEND_HOST}/Blog/BlogSearch`, Search)
+            setsearchData(result.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // Get Blog Seacrh and all end
+
     return (
         <ContextBlog.Provider value={{
             env,
             handleChangeLogin,
             LoginBtn,
-            loading
+            loading,
+            GetBlogSearch,
+            searchData
         }}>
             {children}
         </ContextBlog.Provider>

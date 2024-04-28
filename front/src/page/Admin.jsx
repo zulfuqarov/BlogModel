@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import LogoutButton from '../components/LogoutButton'
 import FormBlog from '../components/FormBlog'
+import FilteringBlogAdmin from '../components/FilteringBlogAdmin'
 
 const Admin = () => {
   const navigate = useNavigate()
@@ -24,9 +25,13 @@ const Admin = () => {
   }, [])
 
   return (
-    <div className=' w-full h-full pb-[60px]'>
+    <div className='w-full h-full pb-[60px] container mx-auto'>
+
       <LogoutButton Logout={Logout} />
-      <FormBlog />
+      <div className='flex justify-between pt-[60px]'>
+        <FilteringBlogAdmin />
+        <Outlet />
+      </div>
     </div>
   )
 }

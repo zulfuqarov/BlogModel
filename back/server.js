@@ -38,6 +38,7 @@ const connectMongoDb = async () => {
 };
 
 server.use("/api", AllRouter);
+
 server.listen(Port, async () => {
   try {
     await connectMongoDb();
