@@ -67,9 +67,12 @@ const FormBlog = () => {
             const fileUpload = new FormData()
             fileUpload.append('title', blogFormInput.title)
             fileUpload.append('descriptionTitle', blogFormInput.descriptionTitle)
-            fileUpload.append('description', description)
             fileUpload.append('Name', blogFormInput.Name)
-            fileUpload.append('links', linkUrl)
+            fileUpload.append("links", JSON.stringify(linkUrl))
+
+            description.forEach(description => {
+                fileUpload.append('description', description)
+            })
             descriptionImg.forEach(descriptionImg => {
                 fileUpload.append('descriptionImg', descriptionImg)
             })
@@ -89,6 +92,7 @@ const FormBlog = () => {
     }
 
 
+
     if (loading) {
         return (
             <div className='flex justify-center items-center w-full h-[100vh]' role="status ">
@@ -106,7 +110,7 @@ const FormBlog = () => {
 
                 <div className="group relative w-72 md:w-80 lg:w-96">
                     <label className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-blue-400">Blog Titile</label>
-                    <input onChange={handleChangeblogFormInput} name='title' id="1" type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                    <input onChange={handleChangeblogFormInput} name='title'  type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                 </div>
 
                 <div className="pt-[30px] flex flex-col justify-center items-center">
@@ -130,15 +134,15 @@ const FormBlog = () => {
 
                 <div className="group relative w-72 md:w-80 lg:w-96 py-[30px]">
                     <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Blog Description Title</label>
-                    <textarea onChange={handleChangeblogFormInput} name='descriptionTitle' id="message" rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Blog Description Title"></textarea>
+                    <textarea onChange={handleChangeblogFormInput} name='descriptionTitle'  rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Blog Description Title"></textarea>
                 </div>
 
                 <div className="group relative w-72 md:w-80 lg:w-96">
                     <label className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-blue-400">Blog Description</label>
-                    <input onChange={(e) => { handleChangeDescription(e, 0) }} placeholder='Blog Description' id="1" type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                    <input onChange={(e) => { handleChangeDescription(e, 0) }} placeholder='Blog Description'  type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                     {
                         [...Array(inputCount)].map((_, index) => (
-                            <input key={index} id="1" type="text" onChange={(e) => { handleChangeDescription(e, index + 1) }} placeholder='Blog Description' className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                            <input key={index}  type="text" onChange={(e) => { handleChangeDescription(e, index + 1) }} placeholder='Blog Description' className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                         ))
                     }
                     <button className="m-[10px] focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900" onClick={handleAddInput}>+</button>
@@ -165,7 +169,7 @@ const FormBlog = () => {
 
                 <div className="group relative w-72 md:w-80 lg:w-96 pt-[30px]">
                     <label className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-blue-400">Name</label>
-                    <input onChange={handleChangeblogFormInput} name='Name' placeholder='Name' id="1" type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                    <input onChange={handleChangeblogFormInput} name='Name' placeholder='Name'  type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                 </div>
 
                 <div className="pt-[30px] flex flex-col justify-center items-center">

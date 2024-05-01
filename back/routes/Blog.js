@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post("/BlogPost", async (req, res) => {
   const { title, descriptionTitle, description, Name, links } = req.body;
+
   let BlogImg =
     req.files && req.files.BlogImg
       ? Array.isArray(req.files.BlogImg)
@@ -30,7 +31,6 @@ router.post("/BlogPost", async (req, res) => {
         })
       );
     }
-
     if (descriptionImg !== "No Img") {
       descriptionImg = await Promise.all(
         descriptionImg.map(async (oneMap) => {
@@ -46,7 +46,7 @@ router.post("/BlogPost", async (req, res) => {
       descriptionTitle,
       description,
       Name,
-      links,
+      links: JSON.parse(links),
       img: BlogImg !== "No Img" ? BlogImg : BlogImg,
       descriptionImg:
         descriptionImg !== "No Img" ? descriptionImg : descriptionImg,
@@ -62,11 +62,70 @@ router.post("/BlogPost", async (req, res) => {
 
 router.put("/BlogPut/:id", async (req, res) => {
   const { id } = req.params;
+  const {
+    title,
+    descriptionTitle,
+    description,
+    Name,
+    links,
+    oldBlogImg,
+    olddescriptionImg,
+  } = req.body;
+
+  let BlogImg =
+    req.files && req.files.BlogImg
+      ? Array.isArray(req.files.BlogImg)
+        ? req.files.BlogImg.map((oneMap) => oneMap.tempFilePath)
+        : [req.files.BlogImg.tempFilePath]
+      : null;
+
+  let descriptionImg =
+    req.files && req.files.descriptionImg
+      ? Array.isArray(req.files.descriptionImg)
+        ? req.files.descriptionImg.map((oneMap) => oneMap.tempFilePath)
+        : [req.files.descriptionImg.tempFilePath]
+      : null;
+
   try {
+    if (BlogImg !== null) {
+      BlogImg = await Promise.all(
+        BlogImg.map(async (oneMap) => {
+          return await cloudinary.uploader.upload(oneMap, {
+            use_filename: true,
+            folder: "Home",
+          });
+        })
+      );
+    }
+    if (descriptionImg !== null) {
+      descriptionImg = await Promise.all(
+        descriptionImg.map(async (oneMap) => {
+          return await cloudinary.uploader.upload(oneMap, {
+            use_filename: true,
+            folder: "Home",
+          });
+        })
+      );
+    }
+    const updated = {
+      title,
+      descriptionTitle,
+      description,
+      Name,
+      links: JSON.parse(links),
+      img: [
+        ...JSON.parse(oldBlogImg),
+        ...(BlogImg !== null ? BlogImg : BlogImg),
+      ],
+      descriptionImg: [
+        ...JSON.parse(olddescriptionImg),
+        ...(descriptionImg !== null ? descriptionImg : descriptionImg),
+      ],
+    };
     const BlogPut = await BlogSchema.findByIdAndUpdate(
       id,
       {
-        $set: req.body,
+        $set: updated,
       },
       { new: true }
     );
@@ -134,6 +193,17 @@ router.post("/BlogGetAndSearch/:count/:perPage", async (req, res) => {
   }
 });
 
+router.get("/BlogGet/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const BlogGet = await BlogSchema.findById({
+      _id: id,
+    });
+    res.status(200).json(BlogGet);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 // router.get("/BlogGet/:count/:perPage", async (req, res) => {
 //   const { count, perPage } = req.params;
