@@ -87,7 +87,6 @@ const FormBlogUpdate = () => {
   const handleSubmit = async () => {
     setnewDescription([...description, ...newDescription])
     setnewLinkUrl([...linkUrl, ...newLinkUrl])
-    console.log(BlogImg)
     setloading(true)
     try {
       const fileUpload = new FormData()
@@ -147,6 +146,34 @@ const FormBlogUpdate = () => {
     }
   }
 
+  const deleteImgOld = (name) => {
+    const deleteImgFilter = oldBlogImg.filter((oneFilter) => {
+      return oneFilter.secure_url !== name
+    })
+    setoldBlogImg(deleteImgFilter)
+  }
+
+  const deleteImgNew = (name) => {
+    const deleteImgFilter = BlogImg.filter((oneFilter) => {
+      return oneFilter.name !== name
+    })
+    setBlogImg(deleteImgFilter)
+  }
+
+  const deleteImgDescriptionOld = (name) => {
+    const deleteImgFilter = olddescriptionImg.filter((oneFilter) => {
+      return oneFilter.secure_url !== name
+    })
+    setolddescriptionImg(deleteImgFilter)
+  }
+
+  const deleteImgDescriptionNew = (name) => {
+    const deleteImgFilter = descriptionImg.filter((oneFilter) => {
+      return oneFilter.name !== name
+    })
+    setdescriptionImg(deleteImgFilter)
+  }
+
   useEffect(() => {
     BlogGetUpdateData()
   }, [id])
@@ -186,9 +213,9 @@ const FormBlogUpdate = () => {
               <div className='flex flex-col justify-center items-center'>
                 <p className='text-red-500 text-[22px] py-[15px]'>Selection Img</p>
                 {oldBlogImg.map((item, index) => (
-                  <div key={index}>
-                    <p >{item.name}</p>
+                  <div className='flex items-center' key={index}>
                     <p>{item.secure_url}</p>
+                    <button onClick={() => deleteImgOld(item.secure_url)} className='text-red-500 pl-[20px]  text-[32px] font-thin'>-</button>
                   </div>
 
                 ))}
@@ -198,7 +225,10 @@ const FormBlogUpdate = () => {
             BlogImg.length > 0 ?
               <div className='flex flex-col justify-center items-center'>
                 {BlogImg.map((item, index) => (
-                  <p key={index}>{item.name}</p>
+                  <div className='flex items-center' key={index}>
+                    <p key={index}>{item.name}</p>
+                    <button onClick={() => deleteImgNew(item.name)} className='text-red-500 pl-[20px]  text-[32px] font-thin'>-</button>
+                  </div>
                 ))}
               </div> : ''
           }
@@ -267,9 +297,9 @@ const FormBlogUpdate = () => {
               <div className='flex flex-col justify-center items-center'>
                 <p className='text-red-500 text-[22px] py-[15px]'>Selection Img</p>
                 {olddescriptionImg.map((item, index) => (
-                  <div key={index}>
-                    <p >{item.name}</p>
-                    <p >{item.secure_url}</p>
+                  <div className='flex items-center' key={index}>
+                    <p>{item.secure_url}</p>
+                    <button onClick={() => deleteImgDescriptionOld(item.secure_url)} className='text-red-500 pl-[20px]  text-[32px] font-thin'>-</button>
                   </div>
                 ))}
               </div> : ''
@@ -278,7 +308,10 @@ const FormBlogUpdate = () => {
             descriptionImg.length > 0 ?
               <div className='flex flex-col justify-center items-center'>
                 {descriptionImg.map((item, index) => (
-                  <p key={index}>{item.name}</p>
+                  <div className='flex items-center' key={index}>
+                    <p>{item.name}</p>
+                    <button onClick={() => deleteImgDescriptionNew(item.name)} className='text-red-500 pl-[20px]  text-[32px] font-thin'>-</button>
+                  </div>
                 ))}
               </div> : ''
           }

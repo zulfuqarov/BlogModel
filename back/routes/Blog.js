@@ -77,17 +77,17 @@ router.put("/BlogPut/:id", async (req, res) => {
       ? Array.isArray(req.files.BlogImg)
         ? req.files.BlogImg.map((oneMap) => oneMap.tempFilePath)
         : [req.files.BlogImg.tempFilePath]
-      : null;
+      : [];
 
   let descriptionImg =
     req.files && req.files.descriptionImg
       ? Array.isArray(req.files.descriptionImg)
         ? req.files.descriptionImg.map((oneMap) => oneMap.tempFilePath)
         : [req.files.descriptionImg.tempFilePath]
-      : null;
+      : [];
 
   try {
-    if (BlogImg !== null) {
+    if (BlogImg.length !== 0) {
       BlogImg = await Promise.all(
         BlogImg.map(async (oneMap) => {
           return await cloudinary.uploader.upload(oneMap, {
@@ -97,7 +97,7 @@ router.put("/BlogPut/:id", async (req, res) => {
         })
       );
     }
-    if (descriptionImg !== null) {
+    if (descriptionImg.length !== 0) {
       descriptionImg = await Promise.all(
         descriptionImg.map(async (oneMap) => {
           return await cloudinary.uploader.upload(oneMap, {
@@ -115,11 +115,11 @@ router.put("/BlogPut/:id", async (req, res) => {
       links: JSON.parse(links),
       img: [
         ...JSON.parse(oldBlogImg),
-        ...(BlogImg !== null ? BlogImg : BlogImg),
+        ...(BlogImg.length !== 0 ? BlogImg : BlogImg),
       ],
       descriptionImg: [
         ...JSON.parse(olddescriptionImg),
-        ...(descriptionImg !== null ? descriptionImg : descriptionImg),
+        ...(descriptionImg.length !== 0 ? descriptionImg : descriptionImg),
       ],
     };
     const BlogPut = await BlogSchema.findByIdAndUpdate(

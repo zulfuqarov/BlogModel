@@ -59,7 +59,7 @@ const FilteringBlogAdmin = () => {
                             .map((oneMap, index) => (
                                 <div key={index} className='flex w-full py-[5px] my-[5px] border-b-[1px] border-b-black'>
                                     <div>
-                                        <img className='w-[150px]' src={`${oneMap.img[0].url}`} alt='' />
+                                        <img className='w-[150px]' src={oneMap.img.length > 0 ? `${oneMap.img[0].url}` : ""} alt='no-img' />
                                     </div>
                                     <div className='flex justify-center items-center w-full flex-col'>
                                         <h2 className='pb-[10px]'>{oneMap.title}</h2>
