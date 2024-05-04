@@ -9,10 +9,12 @@ const BlogSchema = mongoose.Schema(
     img: {
       type: Array,
       default: [],
+      required: true,
     },
     descriptionTitle: {
       type: String,
       default: "",
+      required: true,
     },
     descriptionImg: {
       type: Array,
@@ -21,14 +23,17 @@ const BlogSchema = mongoose.Schema(
     description: {
       type: Array,
       default: [],
+      required: true,
     },
     Name: {
       type: String,
       default: "",
+      required: true,
     },
     links: {
       type: Array,
-      default: "",
+      default: [],
+      required: true,
     },
   },
   {

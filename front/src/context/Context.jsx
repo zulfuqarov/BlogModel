@@ -49,8 +49,10 @@ const Context = ({ children }) => {
     // Get Blog Seacrh and all start
     const [searchData, setsearchData] = useState([])
     const [seacrhDataLoading, setseacrhDataLoading] = useState(false)
+    const [searchError, setsearchError] = useState(false)
     const GetBlogSearch = async (Search) => {
         setseacrhDataLoading(true)
+        setsearchError(false)
         try {
             const result = await axios.post(`${env.REACT_APP_BACKEND_HOST}/Blog/BlogSearch`, Search)
             setsearchData(result.data)
@@ -58,6 +60,7 @@ const Context = ({ children }) => {
         } catch (error) {
             setseacrhDataLoading(false)
             console.log(error)
+            setsearchError(true)
         }
     }
 
@@ -71,7 +74,8 @@ const Context = ({ children }) => {
             loading,
             GetBlogSearch,
             searchData,
-            seacrhDataLoading
+            seacrhDataLoading,
+            searchError
         }}>
             {children}
         </ContextBlog.Provider>

@@ -84,67 +84,8 @@ const FormBlogUpdate = () => {
     setnewLinkUrl(newLinksUrl)
   }
 
-  const handleSubmit = async () => {
-    setnewDescription([...description, ...newDescription])
-    setnewLinkUrl([...linkUrl, ...newLinkUrl])
-    setloading(true)
-    try {
-      const fileUpload = new FormData()
-      fileUpload.append('title', blogFormInput.title)
-      fileUpload.append('descriptionTitle', blogFormInput.descriptionTitle)
-      fileUpload.append('Name', blogFormInput.Name)
-      fileUpload.append("links", JSON.stringify(newLinkUrl))
-
-      newDescription.forEach(newDescription => {
-        fileUpload.append('description', newDescription)
-      })
-
-      fileUpload.append('olddescriptionImg', JSON.stringify(olddescriptionImg))
-      descriptionImg.forEach(descriptionImg => {
-        fileUpload.append('descriptionImg', descriptionImg)
-      })
-
-      fileUpload.append('oldBlogImg', JSON.stringify(oldBlogImg))
-      BlogImg.forEach(BlogImg => {
-        fileUpload.append('BlogImg', BlogImg)
-      });
-
-      const result = await axios.put(`${context.env.REACT_APP_BACKEND_HOST}/Blog/BlogPut/${id}`, fileUpload)
-      alert(result.data.message)
-      setloading(false)
-
-    } catch (error) {
-      console.log(error)
-      alert(`${error.response.data.message}`)
-      setloading(false)
-    }
-
-  }
 
 
-  const [seacrhDataLoading, setseacrhDataLoading] = useState(false)
-  const BlogGetUpdateData = async () => {
-    setseacrhDataLoading(true)
-    try {
-      const result = await axios.get(`${context.env.REACT_APP_BACKEND_HOST}/Blog/BlogGet/${id}`)
-      const response = result.data
-      console.log(response)
-      setoldBlogImg(response.img)
-      setblogFromInput({
-        title: response.title,
-        descriptionTitle: response.descriptionTitle,
-        Name: response.Name
-      })
-      setolddescriptionImg(response.descriptionImg)
-      setnewLinkUrl(response.links)
-      setnewDescription(response.description)
-
-      setseacrhDataLoading(false)
-    } catch (error) {
-      console.log(error)
-      setseacrhDataLoading(false)
-    }
-  }
 
   const deleteImgOld = (name) => {
     const deleteImgFilter = oldBlogImg.filter((oneFilter) => {
@@ -173,6 +114,96 @@ const FormBlogUpdate = () => {
     })
     setdescriptionImg(deleteImgFilter)
   }
+
+  const deleteLinksUrl = (indexLinks) => {
+    const deleteLinkFilter = newLinkUrl.filter((oneFilter, index) => {
+      return index !== indexLinks
+    })
+    setnewLinkUrl(deleteLinkFilter)
+  }
+
+  const deleteLinksUrlOld = () => {
+    setinputCountLink(inputCountLink - 1)
+  }
+
+  const deleteDescription = (indexDescripton) => {
+    const deleteDescriptionFilter = newDescription.filter((oneFilter, index) => {
+      return index !== indexDescripton
+    })
+    setnewDescription(deleteDescriptionFilter)
+  }
+
+  const deleteDescriptionOld = () => {
+    setInputCount(inputCount - 1)
+  }
+
+
+
+
+  const handleSubmit = async () => {
+
+
+    const updatingNewDescription = [...description, ...newDescription]
+    const updatingNewLinkUrl = [...linkUrl, ...newLinkUrl]
+
+
+    setloading(true)
+
+    try {
+      const fileUpload = new FormData()
+      fileUpload.append('title', blogFormInput.title)
+      fileUpload.append('descriptionTitle', blogFormInput.descriptionTitle)
+      fileUpload.append('Name', blogFormInput.Name)
+      fileUpload.append("links", JSON.stringify(updatingNewLinkUrl))
+      fileUpload.append('description', JSON.stringify(updatingNewDescription))
+
+
+      fileUpload.append('olddescriptionImg', JSON.stringify(olddescriptionImg))
+      descriptionImg.forEach(descriptionImg => {
+        fileUpload.append('descriptionImg', descriptionImg)
+      })
+
+      fileUpload.append('oldBlogImg', JSON.stringify(oldBlogImg))
+      BlogImg.forEach(BlogImg => {
+        fileUpload.append('BlogImg', BlogImg)
+      });
+
+      const result = await axios.put(`${context.env.REACT_APP_BACKEND_HOST}/Blog/BlogPut/${id}`, fileUpload)
+      alert(result.data.message)
+      setloading(false)
+
+    } catch (error) {
+      console.log(error)
+      alert(`${error.response.data.message}`)
+      setloading(false)
+    }
+
+  }
+
+  const [seacrhDataLoading, setseacrhDataLoading] = useState(false)
+  const BlogGetUpdateData = async () => {
+    setseacrhDataLoading(true)
+    try {
+      const result = await axios.get(`${context.env.REACT_APP_BACKEND_HOST}/Blog/BlogGet/${id}`)
+      const response = result.data
+      console.log(response)
+      setoldBlogImg(response.img)
+      setblogFromInput({
+        title: response.title,
+        descriptionTitle: response.descriptionTitle,
+        Name: response.Name
+      })
+      setolddescriptionImg(response.descriptionImg)
+      setnewLinkUrl(response.links)
+      setnewDescription(response.description)
+
+      setseacrhDataLoading(false)
+    } catch (error) {
+      console.log(error)
+      setseacrhDataLoading(false)
+    }
+  }
+
 
   useEffect(() => {
     BlogGetUpdateData()
@@ -244,12 +275,18 @@ const FormBlogUpdate = () => {
           {
             newDescription &&
             newDescription.map((oneMap, index) => (
-              <input value={newDescription[index]} onChange={(e) => { handleChangenewDescription(e, index) }} key={index} type="text" placeholder='Blog Description' className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+              <div key={index} className='flex items-center'>
+                <input value={newDescription[index]} onChange={(e) => { handleChangenewDescription(e, index) }} key={index} type="text" placeholder='Blog Description' className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                <button onClick={() => deleteDescription(index)} className='ml-[15px] text-red-600 text-[18px] font-bold'>X</button>
+              </div>
             ))
           }
           {
             [...Array(inputCount)].map((_, index) => (
-              <input value={description[index] || ''} key={index} type="text" onChange={(e) => { handleChangeDescription(e, index) }} placeholder='Blog Description' className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+              <div key={index} className='flex items-center'>
+                <input value={description[index] || ''} key={index} type="text" onChange={(e) => { handleChangeDescription(e, index) }} placeholder='Blog Description' className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                <button onClick={() => deleteDescriptionOld()} className='ml-[15px] text-red-600 text-[18px] font-bold'>X</button>
+              </div>
             ))
           }
           <button className="m-[10px] focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900" onClick={handleAddInput}>+</button>
@@ -260,7 +297,8 @@ const FormBlogUpdate = () => {
           {
             newLinkUrl &&
             newLinkUrl.map((oneMap, index) => (
-              <div className='mt-[5px] py-[25px] px-[50px] rounded-lg border-[1px] border-black' key={index}>
+              <div className='mt-[5px] py-[25px] px-[50px] rounded-lg border-[1px] border-black relative' key={index}>
+                <button onClick={() => deleteLinksUrl(index)} className='absolute right-[15px] top-0 text-red-500 text-[18px] font-body'>X</button>
                 <input value={oneMap.Name} name='Name' onChange={(e) => handleChangenewLinkUrl(e, index)} placeholder='name 1' type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                 <input value={oneMap.links} name='links' onChange={(e) => handleChangenewLinkUrl(e, index)} placeholder='Links 1' type="text" className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
               </div>
@@ -268,12 +306,12 @@ const FormBlogUpdate = () => {
           }
           {
             [...Array(inputCountLink)].map((_, index) => (
-              <div className='mt-[5px] py-[25px] px-[50px] rounded-lg border-[1px] border-black' key={index}>
+              <div className='mt-[5px] py-[25px] px-[50px] rounded-lg border-[1px] border-black relative' key={index}>
+                <button onClick={() => deleteLinksUrlOld()} className='absolute right-[15px] top-0 text-red-500 text-[18px] font-body'>X</button>
                 <input name='Name' onChange={(e) => handleChangeLinkUrl(e, index)} placeholder={`name ${index + 1}`} type="text" className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                 <input name='links' onChange={(e) => handleChangeLinkUrl(e, index)} placeholder={`Links ${index + 1}`} type="text" className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
               </div>
             ))
-
           }
           <button onClick={handleAddInputLink} className="m-[10px] focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900" >+</button>
 

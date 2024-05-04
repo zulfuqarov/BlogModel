@@ -12,16 +12,16 @@ router.post("/BlogPost", async (req, res) => {
       ? Array.isArray(req.files.BlogImg)
         ? req.files.BlogImg.map((oneMap) => oneMap.tempFilePath)
         : [req.files.BlogImg.tempFilePath]
-      : "No Img";
+      : [];
 
   let descriptionImg =
     req.files && req.files.descriptionImg
       ? Array.isArray(req.files.descriptionImg)
         ? req.files.descriptionImg.map((oneMap) => oneMap.tempFilePath)
         : [req.files.descriptionImg.tempFilePath]
-      : "No Img";
+      : [];
   try {
-    if (BlogImg !== "No Img") {
+    if (BlogImg.length !== 0) {
       BlogImg = await Promise.all(
         BlogImg.map(async (oneMap) => {
           return await cloudinary.uploader.upload(oneMap, {
@@ -31,7 +31,7 @@ router.post("/BlogPost", async (req, res) => {
         })
       );
     }
-    if (descriptionImg !== "No Img") {
+    if (descriptionImg.length !== 0) {
       descriptionImg = await Promise.all(
         descriptionImg.map(async (oneMap) => {
           return await cloudinary.uploader.upload(oneMap, {
@@ -44,12 +44,12 @@ router.post("/BlogPost", async (req, res) => {
     const newBlogSchema = await new BlogSchema({
       title,
       descriptionTitle,
-      description,
+      description: JSON.parse(description),
       Name,
       links: JSON.parse(links),
-      img: BlogImg !== "No Img" ? BlogImg : BlogImg,
+      img: BlogImg.length !== 0 ? BlogImg : BlogImg,
       descriptionImg:
-        descriptionImg !== "No Img" ? descriptionImg : descriptionImg,
+        descriptionImg.length !== 0 ? descriptionImg : descriptionImg,
     });
     await newBlogSchema.save();
     return res
@@ -110,7 +110,7 @@ router.put("/BlogPut/:id", async (req, res) => {
     const updated = {
       title,
       descriptionTitle,
-      description,
+      description: JSON.parse(description),
       Name,
       links: JSON.parse(links),
       img: [
@@ -159,9 +159,9 @@ router.post("/BlogSearch", async (req, res) => {
       title: { $regex: new RegExp("\\b" + Search, "i") },
     });
     if (BlogSearch.length > 0) {
-      res.status(200).json(BlogSearch);
+      return res.status(200).json(BlogSearch);
     } else {
-      res
+      return res
         .status(404)
         .json({ message: "Aranan kategoriye uygun indirim bulunamadı" });
     }

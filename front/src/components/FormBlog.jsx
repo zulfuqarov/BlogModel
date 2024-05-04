@@ -69,10 +69,11 @@ const FormBlog = () => {
             fileUpload.append('descriptionTitle', blogFormInput.descriptionTitle)
             fileUpload.append('Name', blogFormInput.Name)
             fileUpload.append("links", JSON.stringify(linkUrl))
+            fileUpload.append('description', JSON.stringify(description))
 
-            description.forEach(description => {
-                fileUpload.append('description', description)
-            })
+            // description.forEach(description => {
+            //     fileUpload.append('description', description)
+            // })
             descriptionImg.forEach(descriptionImg => {
                 fileUpload.append('descriptionImg', descriptionImg)
             })
@@ -83,14 +84,56 @@ const FormBlog = () => {
             const result = await axios.post(`${context.env.REACT_APP_BACKEND_HOST}/Blog/BlogPost`, fileUpload)
             alert(result.data.message)
             setloading(false)
-
+            setblogFromInput({
+                title: '',
+                descriptionTitle: '',
+                Name: ''
+            })
+            setDescription([])
+            setBlogImg([])
+            setdescriptionImg([])
+            setlinkUrl([])
+            setInputCount(0)
+            setinputCountLink(0)
         } catch (error) {
             console.log(error)
             alert(`${error.response.data.message}`)
             setloading(false)
+            setblogFromInput({
+                title: '',
+                descriptionTitle: '',
+                Name: ''
+            })
+            setDescription([])
+            setBlogImg([])
+            setdescriptionImg([])
+            setlinkUrl([])
+            setInputCount(0)
+            setinputCountLink(0)
         }
     }
 
+    const deleteImgNew = (name) => {
+        const deleteImgFilter = BlogImg.filter((oneFilter) => {
+            return oneFilter.name !== name
+        })
+        setBlogImg(deleteImgFilter)
+    }
+
+    const deleteImgDescriptionNew = (name) => {
+        const deleteImgFilter = descriptionImg.filter((oneFilter) => {
+            return oneFilter.name !== name
+        })
+        setdescriptionImg(deleteImgFilter)
+    }
+
+    const deleteLinksUrlOld = () => {
+        setinputCountLink(inputCountLink - 1)
+    }
+
+    const deleteDescriptionOld = () => {
+        setInputCount(inputCount - 1)
+    }
 
 
     if (loading) {
@@ -110,7 +153,7 @@ const FormBlog = () => {
 
                 <div className="group relative w-72 md:w-80 lg:w-96">
                     <label className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-blue-400">Blog Titile</label>
-                    <input onChange={handleChangeblogFormInput} name='title'  type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                    <input onChange={handleChangeblogFormInput} name='title' type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                 </div>
 
                 <div className="pt-[30px] flex flex-col justify-center items-center">
@@ -126,7 +169,10 @@ const FormBlog = () => {
                             <div className='flex flex-col justify-center items-center'>
                                 <p className='text-red-500 text-[22px] py-[15px]'>Selection Img</p>
                                 {BlogImg.map((item, index) => (
-                                    <p key={index}>{item.name}</p>
+                                    <div className='flex items-center' key={index}>
+                                        <p key={index}>{item.name}</p>
+                                        <button onClick={() => deleteImgNew(item.name)} className='text-red-500 pl-[20px]  text-[32px] font-thin'>-</button>
+                                    </div>
                                 ))}
                             </div> : ''
                     }
@@ -134,15 +180,18 @@ const FormBlog = () => {
 
                 <div className="group relative w-72 md:w-80 lg:w-96 py-[30px]">
                     <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Blog Description Title</label>
-                    <textarea onChange={handleChangeblogFormInput} name='descriptionTitle'  rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Blog Description Title"></textarea>
+                    <textarea onChange={handleChangeblogFormInput} name='descriptionTitle' rows="4" className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Blog Description Title"></textarea>
                 </div>
 
                 <div className="group relative w-72 md:w-80 lg:w-96">
                     <label className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-blue-400">Blog Description</label>
-                    <input onChange={(e) => { handleChangeDescription(e, 0) }} placeholder='Blog Description'  type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                    <input onChange={(e) => { handleChangeDescription(e, 0) }} placeholder='Blog Description' type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                     {
                         [...Array(inputCount)].map((_, index) => (
-                            <input key={index}  type="text" onChange={(e) => { handleChangeDescription(e, index + 1) }} placeholder='Blog Description' className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                            <div className='flex items-center'>
+                                <input key={index} type="text" onChange={(e) => { handleChangeDescription(e, index + 1) }} placeholder='Blog Description' className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                                <button onClick={() => deleteDescriptionOld()} className='ml-[15px] text-red-600 text-[18px] font-bold'>X</button>
+                            </div>
                         ))
                     }
                     <button className="m-[10px] focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900" onClick={handleAddInput}>+</button>
@@ -156,7 +205,8 @@ const FormBlog = () => {
                     </div>
                     {
                         [...Array(inputCountLink)].map((_, index) => (
-                            <div className='mt-[5px] py-[25px] px-[50px] rounded-lg border-[1px] border-black' key={index}>
+                            <div className='mt-[5px] py-[25px] px-[50px] rounded-lg border-[1px] border-black relative' key={index}>
+                                <button onClick={() => deleteLinksUrlOld()} className='absolute right-[15px] top-0 text-red-500 text-[18px] font-body'>X</button>
                                 <input name='Name' onChange={(e) => handleChangeLinkUrl(e, index + 1)} placeholder={`name ${index + 2}`} type="text" className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                                 <input name='links' onChange={(e) => handleChangeLinkUrl(e, index + 1)} placeholder={`Links ${index + 2}`} type="text" className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                             </div>
@@ -169,7 +219,7 @@ const FormBlog = () => {
 
                 <div className="group relative w-72 md:w-80 lg:w-96 pt-[30px]">
                     <label className="block w-full pb-1 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out group-focus-within:text-blue-400">Name</label>
-                    <input onChange={handleChangeblogFormInput} name='Name' placeholder='Name'  type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                    <input onChange={handleChangeblogFormInput} name='Name' placeholder='Name' type="text" className="peer border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
                 </div>
 
                 <div className="pt-[30px] flex flex-col justify-center items-center">
@@ -185,7 +235,10 @@ const FormBlog = () => {
                             <div className='flex flex-col justify-center items-center'>
                                 <p className='text-red-500 text-[22px] py-[15px]'>Selection Img</p>
                                 {descriptionImg.map((item, index) => (
-                                    <p key={index}>{item.name}</p>
+                                    <div className='flex items-center' key={index}>
+                                        <p>{item.name}</p>
+                                        <button onClick={() => deleteImgDescriptionNew(item.name)} className='text-red-500 pl-[20px]  text-[32px] font-thin'>-</button>
+                                    </div>
                                 ))}
                             </div> : ''
                     }
