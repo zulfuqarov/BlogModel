@@ -122,8 +122,12 @@ const FormBlogUpdate = () => {
     setnewLinkUrl(deleteLinkFilter)
   }
 
-  const deleteLinksUrlOld = () => {
+  const deleteLinksUrlOld = (indexLinks) => {
     setinputCountLink(inputCountLink - 1)
+    const deleteLinkOldFilter = linkUrl.filter((oneFilter, index) => {
+      return index !== indexLinks
+    })
+    setlinkUrl(deleteLinkOldFilter)
   }
 
   const deleteDescription = (indexDescripton) => {
@@ -133,8 +137,12 @@ const FormBlogUpdate = () => {
     setnewDescription(deleteDescriptionFilter)
   }
 
-  const deleteDescriptionOld = () => {
+  const deleteDescriptionOld = (indexDescripton) => {
     setInputCount(inputCount - 1)
+    const deleteDescriptionOldFilter = description.filter((oneFilter, index) => {
+      return index !== indexDescripton
+    })
+    setDescription(deleteDescriptionOldFilter)
   }
 
 
@@ -285,7 +293,7 @@ const FormBlogUpdate = () => {
             [...Array(inputCount)].map((_, index) => (
               <div key={index} className='flex items-center'>
                 <input value={description[index] || ''} key={index} type="text" onChange={(e) => { handleChangeDescription(e, index) }} placeholder='Blog Description' className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
-                <button onClick={() => deleteDescriptionOld()} className='ml-[15px] text-red-600 text-[18px] font-bold'>X</button>
+                <button onClick={() => deleteDescriptionOld(index)} className='ml-[15px] text-red-600 text-[18px] font-bold'>X</button>
               </div>
             ))
           }
@@ -307,9 +315,9 @@ const FormBlogUpdate = () => {
           {
             [...Array(inputCountLink)].map((_, index) => (
               <div className='mt-[5px] py-[25px] px-[50px] rounded-lg border-[1px] border-black relative' key={index}>
-                <button onClick={() => deleteLinksUrlOld()} className='absolute right-[15px] top-0 text-red-500 text-[18px] font-body'>X</button>
-                <input name='Name' onChange={(e) => handleChangeLinkUrl(e, index)} placeholder={`name ${index + 1}`} type="text" className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
-                <input name='links' onChange={(e) => handleChangeLinkUrl(e, index)} placeholder={`Links ${index + 1}`} type="text" className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                <button onClick={() => deleteLinksUrlOld(index)} className='absolute right-[15px] top-0 text-red-500 text-[18px] font-body'>X</button>
+                <input value={linkUrl[index] ? linkUrl[index].Name : ''} name='Name' onChange={(e) => handleChangeLinkUrl(e, index)} placeholder={`name ${index + 1}`} type="text" className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
+                <input value={linkUrl[index] ? linkUrl[index].links : ''} name='links' onChange={(e) => handleChangeLinkUrl(e, index)} placeholder={`Links ${index + 1}`} type="text" className="peer mt-[5px] border-gray-600 focus:border-none border-[1px] h-10 w-full rounded-md bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-blue-400" />
               </div>
             ))
           }
