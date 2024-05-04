@@ -10,9 +10,9 @@ const FilteringBlogAdmin = () => {
     const deleteBlog = async (id) => {
         try {
             const result = await axios.delete(`${context.env.REACT_APP_BACKEND_HOST}/Blog/BlogDelete/${id}`)
-            console.log(result.data)
+            alert(result.data.message)
         } catch (error) {
-            console.log(error)
+            alert(`${error.response.data.message}`)
         }
     }
 
