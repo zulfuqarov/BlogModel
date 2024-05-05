@@ -28,7 +28,7 @@ const Admin = () => {
     <div className='w-full h-full pb-[60px] container mx-auto'>
 
       <LogoutButton Logout={Logout} />
-      <div className='flex justify-between pt-[60px]'>
+      <div className='flex justify-between max-[1280px]:flex-col  pt-[60px]'>
         <FilteringBlogAdmin />
         <Outlet />
       </div>

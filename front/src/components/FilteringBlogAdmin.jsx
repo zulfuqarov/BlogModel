@@ -45,7 +45,7 @@ const FilteringBlogAdmin = () => {
                 </svg>
             </div>
             :
-            <div>
+            <div className='max-[1280px]:mb-[50px] '>
                 <div className="relative">
                     <button onClick={() => context.GetBlogSearch(searchInput)} ><svg className="w-6 h-6 mr-[5px] cursor-pointer text-gray-700 absolute top-3 right-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
                     <input value={searchInput.Search} name="Search" onChange={hadleChangeSearch} type="search" placeholder="Search" className="  border-b-2 w-full border-gray-200 py-3 px-9" />
@@ -55,7 +55,7 @@ const FilteringBlogAdmin = () => {
                         <div className='w-[600px] h-[100vh] py-[10px] overflow-y-auto'>
                             <h2 className='text-center text-[24px] pt-[15px] text-red-600 font-semibold'>Blog is not defined!</h2>
                         </div> :
-                        <div className=' w-[600px] h-[100vh] py-[10px] overflow-y-auto '>
+                        <div className=' w-[600px] max-[1280px]:w-full max-[1280px]:h-full  h-[100vh] py-[10px] overflow-y-auto '>
 
                             <div>
                                 {
