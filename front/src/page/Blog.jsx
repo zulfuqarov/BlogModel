@@ -5,17 +5,16 @@ import ReactPaginate from 'react-paginate';
 
 const Blog = () => {
     const context = useContext(ContextBlog)
-    // console.log(context.env.REACT_APP_BACKEND_HOST)
 
     const shortenText = (text) => {
         if (text.length > 50) {
-            return text.slice(0, 80) + '...'; // Metnin kırpılması ve üç nokta eklenmesi
+            return text.slice(0, 70) + '...';
         }
         return text;
     };
     const shortenTitle = (text) => {
         if (text.length > 25) {
-            return text.slice(0, 35) + '...'; // Metnin kırpılması ve üç nokta eklenmesi
+            return text.slice(0, 35) + '...';
         }
         return text;
     };
@@ -46,10 +45,19 @@ const Blog = () => {
 
     const itemsPerPage = 6;
     const pageCount = Math.ceil(context.searchData.length / itemsPerPage);
-    const displayedItems = context.searchData.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+    const displayedItems = context.searchData.length > 6 ? context.searchData
+        .slice() // Mevcut verilerin kopyasını alıyoruz
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage) : context.searchData
 
     // paginations end
 
+    // Search btn start
+    const SearchBtn = () => {
+        context.GetBlogSearch(searchInput)
+        setCurrentPage(0)
+    }
+    // Search btn end
 
     return (
         context.seacrhDataLoading ?
@@ -61,8 +69,8 @@ const Blog = () => {
             </div>
             :
             <section className='container mx-auto py-[80px]'>
-                <div className="relative w-[600px] mx-auto">
-                    <button onClick={() => context.GetBlogSearch(searchInput)} ><svg className="w-6 h-6 mr-[5px] cursor-pointer text-gray-700 absolute top-3 right-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                <div className="relative w-[600px] max-[768px]:w-[300px] mx-auto">
+                    <button onClick={SearchBtn} ><svg className="w-6 h-6 mr-[5px] cursor-pointer text-gray-700 absolute top-3 right-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
                     <input value={searchInput.Search} name='Search' onChange={handleChangeInputSearch} type="search" placeholder="Search" className="  border-2 w-full border-gray-200 py-3 px-9" />
                 </div>
                 {
@@ -70,12 +78,12 @@ const Blog = () => {
                         <div className='w-[100%] h-[100vh] py-[10px] overflow-y-auto'>
                             <h2 className='text-center text-[24px] pt-[15px] text-red-600 font-semibold'>Blog is not defined!</h2>
                         </div> :
-                        <div className="m-4 lg:flex lg:flex-wrap">
+                        <div className="m-4 flex flex-wrap max-[768px]:justify-center max-[768px]:items-center">
                             {
                                 displayedItems &&
-                                displayedItems.map((oneMap,index) => (
+                                displayedItems.map((oneMap, index) => (
 
-                                    <div key={index} className="p-4 md:w-1/3 group">
+                                    <div key={index} className="p-4 w-1/3 max-[1024px]:w-1/2 max-[768px]:w-full group">
                                         <div className="border-2 border-gray-200 rounded-lg overflow-hidden">
                                             <img className="object-cover object-center w-full lg:h-48 md:h-36 transform transition duration-300 group-hover:scale-105"
                                                 src={`${oneMap.img[0].url}`} alt="blog" />
@@ -84,7 +92,7 @@ const Blog = () => {
                                                 <h1 className="mb-2 text-lg font-medium text-gray-900">{shortenTitle(oneMap.title)}</h1>
                                                 <p className="mb-2 text-sm tracking-wide text-gray-700">{shortenText(oneMap.descriptionTitle)}</p>
                                                 <div className="flex items-center">
-                                                    <Link className="inline-flex items-center text-indigo-500 cursor-pointer md:mb-2 lg:mb-0">Read More
+                                                    <Link to={`/Blog/${oneMap._id}`} className="inline-flex items-center text-indigo-500 cursor-pointer md:mb-2 lg:mb-0">Read More
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                                         </svg>

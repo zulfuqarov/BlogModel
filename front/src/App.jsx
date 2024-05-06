@@ -6,6 +6,7 @@ import Login from './page/Login';
 import Admin from './page/Admin';
 import FormBlog from './components/FormBlog';
 import FormBlogUpdate from './components/FormBlogUpdate';
+import BlogAbout from './page/BlogAbout';
 
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
       <Context>
         <Routes>
           <Route path="/" element={<Blog />} />
+          <Route path='/Blog/:id' element={<BlogAbout />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Admin" element={<Admin />} >
             <Route index={true} element={<FormBlog />} />
