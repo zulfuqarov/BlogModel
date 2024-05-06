@@ -63,8 +63,18 @@ const Context = ({ children }) => {
             setsearchError(true)
         }
     }
-
     // Get Blog Seacrh and all end
+
+    // Get all data start
+    const GetAllData = async () => {
+        try {
+            const result = await axios.get(`${env.REACT_APP_BACKEND_HOST}/Blog/BlogAllData`)
+            return result.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    // Get all data end
 
     return (
         <ContextBlog.Provider value={{
@@ -75,7 +85,8 @@ const Context = ({ children }) => {
             GetBlogSearch,
             searchData,
             seacrhDataLoading,
-            searchError
+            searchError,
+            GetAllData
         }}>
             {children}
         </ContextBlog.Provider>

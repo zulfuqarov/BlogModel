@@ -7,12 +7,12 @@ const BlogAbout = () => {
     const { id } = useParams()
     const context = useContext(ContextBlog)
 
-    const [data, setdata] = useState([])
+    const [data, setdata] = useState()
 
     const GetPost = async () => {
         try {
             const result = await axios.get(`${context.env.REACT_APP_BACKEND_HOST}/Blog/BlogGet/${id}`)
-            console.log(result.data)
+            setdata(result.data)
         } catch (error) {
             console.log(error)
         }
@@ -23,8 +23,9 @@ const BlogAbout = () => {
     }, [])
 
     return (
+        data &&
         <section>
-
+s
         </section>
     )
 }

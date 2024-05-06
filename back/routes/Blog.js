@@ -205,6 +205,15 @@ router.get("/BlogGet/:id", async (req, res) => {
   }
 });
 
+router.get("/BlogAllData", async (req, res) => {
+  try {
+    const allData = await BlogSchema.find();
+    res.status(200).json(allData);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 // router.get("/BlogGet/:count/:perPage", async (req, res) => {
 //   const { count, perPage } = req.params;
 //   const skip = (count - 1) * perPage;
