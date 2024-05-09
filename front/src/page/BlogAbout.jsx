@@ -8,6 +8,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link } from 'react-router-dom';
+import DisqusComments from '../components/DisqusComments';
 const BlogAbout = () => {
     const { id } = useParams()
     const context = useContext(ContextBlog)
@@ -32,7 +33,7 @@ const BlogAbout = () => {
     }, [])
 
     const settings = {
-        dots: true, // Noktaları göster
+        dots: true,
         infinite: true,
         speed: 500,
         slidesToShow: 1,
@@ -129,6 +130,9 @@ const BlogAbout = () => {
 
                     <Link to="/" className='text-[28px] bg-blue-500 w-[60px] h-[60px] rounded-[50%] flex justify-center items-center text-white fixed right-[30px]  bottom-[30px]'><i className="fa-solid fa-left-long fa-fade"></i></Link>
 
+                    <div>
+                        <DisqusComments />
+                    </div>
                 </div >
             </section >
         )
